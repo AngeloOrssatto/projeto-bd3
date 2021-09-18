@@ -10,6 +10,7 @@ import Pagamentos from "./pages/Pagamentos";
 import Avaliacoes from "./pages/Avaliacoes";
 import Stats from "./pages/Stats";
 import Boletins from "./pages/Boletins";
+import Aulas from "./pages/Aulas";
 
 const Routes = () => {
     return(
@@ -40,6 +41,9 @@ const Routes = () => {
             </Route>
             <Route path="/boletim">
                 <Boletins></Boletins>
+            </Route>
+            <Route path="/aula">
+                <Aulas></Aulas>
             </Route>
             <Route path="/stats">
                 <Stats></Stats>
