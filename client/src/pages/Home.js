@@ -15,6 +15,7 @@ const Home = () => {
                     <li><Link className="m-3" to="/pagamento">Pagamento</Link></li>
                     <li><Link className="m-3" to="/avaliacao">Avaliação</Link></li>
                     <li><Link className="m-3" to="/boletim">Boletim</Link></li>
+                    <li><Link className="m-3" to="/aula">Aulas</Link></li>
                     <li><Link className="m-3" to="/stats">SQLS</Link></li>
 
                 </ul>

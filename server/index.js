@@ -21,6 +21,16 @@ app.post("/curso", async(req,res) => {
     }
 })
 
+app.post("/aula", async(req,res) => {
+    try {
+        const { id_matricula, data_aula, status } = req.body;
+        const newAula = await pool.query("INSERT INTO aula (id_matricula, data_aula, status) VALUES ($1, $2, $3) RETURNING *", [id_matricula, data_aula, status]);
+        res.json(newAula.rows[0]);
+    } catch (err) {
+        console.log(err.message);
+    }
+})
+
 app.post("/avaliacao", async(req,res) => {
     try {
         const { id_aluno, nota, observacao, data_avaliacao } = req.body;
@@ -148,6 +158,15 @@ app.get("/cursos", async(req, res) => {
     }
 })
 
+app.get("/aula", async(req, res) => {
+    try {
+        const allAulas = await pool.query('SELECT * FROM aula');
+        res.json(allAulas.rows);
+    } catch (err) {
+        console.log(err.message);   
+    }
+})
+
 app.get("/avaliacao", async(req, res) => {
     try {
         const allAvaliacoes = await pool.query('SELECT * FROM avaliacao');
@@ -252,6 +271,17 @@ app.put("/curso/:id", async(req, res) => {
         const { nome, codigo_curso, valor_curso } = req.body
         const updateCurso = await pool.query('UPDATE curso SET nome = $2, codigo_curso = $3, valor_curso = $4 WHERE curso.id = $1', [id, nome, codigo_curso, valor_curso])
         res.json(updateCurso.rows[0])
+    } catch (err) {
+        console.log(err.message);
+    }
+})
+
+app.put("/aula/:id", async(req, res) => {
+    try {
+        const {id} = req.params
+        const { id_matricula, data_aula, status } = req.body
+        const updatedAula = await pool.query('UPDATE aula SET id_matricula = $2, data_aula = $3, status = $4 WHERE curso.id = $1', [id, id_matricula, data_aula, status])
+        res.json(updatedAula.rows[0])
     } catch (err) {
         console.log(err.message);
     }
@@ -368,6 +398,16 @@ app.delete("/curso/:id", async (req, res) => {
     }
 });
 
+app.delete("/aula/:id", async (req, res) => {
+    try {
+      const { id } = req.params;
+      const deletedAula = await pool.query("DELETE FROM aula WHERE id = $1", [id]);
+      res.json("Aula excluída")
+    } catch (err) {
+      console.log(err.message);
+    }
+});
+
 app.delete("/avaliacao/:id", async (req, res) => {
     try {
       const { id } = req.params;
@@ -441,15 +481,6 @@ app.delete('/aluno/:id', async(req,res) =>{
 // SQLS -------------------------------------------------
 
 app.get("/stats/cursos-ind", async(req, res) => {
-    try {
-        const allCursosInds = await pool.query('SELECT id, nome, valor_curso FROM curso WHERE curso.id NOT IN (SELECT c.id FROM curso c JOIN curso_professor cp ON c.id = cp.id_curso)')
-        res.json(allCursosInds.rows);
-    } catch (err) {
-        console.log(err.message);   
-    }
-})
-
-app.get("/stats/cursos-ind2", async(req, res) => {
     try {
         const allCursosInds = await pool.query('SELECT id, nome, valor_curso FROM curso WHERE curso.id NOT IN (SELECT c.id FROM curso c JOIN curso_professor cp ON c.id = cp.id_curso)')
         res.json(allCursosInds.rows);
