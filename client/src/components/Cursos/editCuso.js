@@ -3,15 +3,13 @@ import React, {Fragment, useState} from "react";
 const EditCurso = ({curso}) => {
 
     const [nome, setNome] = useState(curso.nome)
-    const [codigo, setCodigo] = useState(curso.codigo_curso)
-    const [valor, setValor] = useState(curso.valor_curso)
+    const [codigo_curso, setCodigo] = useState(curso.codigo_curso)
+    const [valor_curso, setValor] = useState(curso.valor_curso)
 
     const updateNome = async (e) => {
         e.preventDefault()
         try {
             console.log(curso)
-            let codigo_curso = parseInt(codigo)
-            let valor_curso = parseFloat(valor)
             const body = {nome, codigo_curso, valor_curso}
             const response = await fetch(`http://localhost:5000/curso/${curso.id}`, {
                 method: 'PUT',
@@ -66,14 +64,14 @@ const EditCurso = ({curso}) => {
                         type="text"
                         className="form-control"
                         placeholder="Codigo"
-                        value={codigo}
+                        value={codigo_curso}
                         onChange={e => setCodigo(e.target.value)}
                     />
                     <input
                         type="text"
                         className="form-control"
                         placeholder="Valor"
-                        value={valor}
+                        value={valor_curso}
                         onChange={e => setValor(e.target.value)}
                     />
                     </div>

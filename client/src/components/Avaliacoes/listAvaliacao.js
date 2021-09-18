@@ -41,6 +41,7 @@ const ListAvaliacao = () => {
                         <th>Nota</th>
                         <th>Observação</th>
                         <th>Data Avaliação</th>
+                        <th>Prof Secundario</th>
                         <th>Editar</th>
                         <th>Excluir</th>
                     </tr>
@@ -52,7 +53,7 @@ const ListAvaliacao = () => {
                         <td>{avaliacao.nota}</td>
                         <td>{avaliacao.observacao}</td>
                         <td>{avaliacao.data_avaliacao}</td>
-                    
+                        <td>{avaliacao.id_professor_secundario}</td>
                         <td>
                             
                             <EditAvaliacao avaliacao={avaliacao}/>

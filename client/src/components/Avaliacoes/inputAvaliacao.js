@@ -3,15 +3,16 @@ import DatePicker from "react-date-picker";
 
 const InputAvaliacao = () => {
 
-    const [id_aluno, setIDAluno] = useState();
-    const [nota, setNota] = useState();
-    const [observacao, setObs] = useState();
+    const [id_aluno, setIDAluno] = useState("");
+    const [nota, setNota] = useState("");
+    const [observacao, setObs] = useState("");
     const [data_avaliacao, setDataAvaliacao] = useState(new Date())
+    const [id_prof_sec, setIDProfSec] = useState("")
 
     const onSubmitForm = async e => {
         e.preventDefault();
         try {
-            const body = { id_aluno, nota, observacao, data_avaliacao }
+            const body = { id_aluno, nota, observacao, data_avaliacao, id_prof_sec }
             console.log(body)
             const response = await fetch("http://localhost:5000/avaliacao", {
                 method: 'POST',
@@ -60,6 +61,13 @@ const InputAvaliacao = () => {
                         onChange={setDataAvaliacao}
                     >
                     </DatePicker>
+                    <input 
+                        type="number" 
+                        placeholder="Prof Secundario" 
+                        className="form-control" 
+                        value={id_prof_sec}
+                        onChange={e => setIDProfSec(e.target.value)}
+                    />
                 </div>
                 <button className="btn btn-success mt-4">Adicionar</button>
             </form>

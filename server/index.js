@@ -12,9 +12,9 @@ app.use(express.json());
 // CREATE
 app.post("/curso", async(req,res) => {
     try {
-        const { nome, codigo_curso, valor_curso } = req.body;
-        console.log(nome, codigo_curso, valor_curso, typeof(nome, codigo_curso, valor_curso));
-        const newCurso = await pool.query("INSERT INTO curso (nome, codigo_curso, valor_curso) VALUES ($1, $2, $3) RETURNING *", [nome, codigo_curso, valor_curso]);
+        const { nome, codigo_curso, valor_curso, id_professor } = req.body;
+        const newCurso = await pool.query("INSERT INTO curso (nome, codigo_curso, valor_curso) VALUES ($1, $2, $3) RETURNING id", [nome, codigo_curso, valor_curso]);
+        const cursoProfessor = await pool.query("INSERT INTO curso_professor (id_professor, id_curso) VALUES ($1, $2)", [id_professor, newCurso.rows[0].id])
         res.json(newCurso.rows[0]);
     } catch (err) {
         console.log(err.message);
@@ -33,8 +33,9 @@ app.post("/aula", async(req,res) => {
 
 app.post("/avaliacao", async(req,res) => {
     try {
-        const { id_aluno, nota, observacao, data_avaliacao } = req.body;
-        const newAvaliacao = await pool.query("INSERT INTO avaliacao (id_aluno, nota, observacao, data_avaliacao) VALUES ($1, $2, $3, $4) RETURNING *", [id_aluno, nota, observacao, data_avaliacao]);
+        const { id_aluno, nota, observacao, data_avaliacao, id_prof_sec } = req.body;
+        const newAvaliacao = await pool.query("INSERT INTO avaliacao (id_aluno, nota, observacao, data_avaliacao) VALUES ($1, $2, $3, $4) RETURNING id", [id_aluno, nota, observacao, data_avaliacao]);
+        const newBanca = await pool.query("INSERT INTO banca (id_avaliacao, id_professor_secundario) VALUES ($1, $2)", [newAvaliacao.rows[0].id, id_prof_sec])
         res.json(newAvaliacao.rows[0]);
     } catch (err) {
         console.log(err.message);
@@ -151,7 +152,7 @@ app.post("/aluno", async(req,res) => {
 // GET *
 app.get("/cursos", async(req, res) => {
     try {
-        const allCursos = await pool.query('SELECT * FROM curso');
+        const allCursos = await pool.query('SELECT c.id, c.nome, c.codigo_curso, c.valor_curso, cp.id_professor FROM curso c JOIN curso_professor cp ON c.id = cp.id_curso');
         res.json(allCursos.rows);
     } catch (err) {
         console.log(err.message);   
@@ -169,7 +170,7 @@ app.get("/aula", async(req, res) => {
 
 app.get("/avaliacao", async(req, res) => {
     try {
-        const allAvaliacoes = await pool.query('SELECT * FROM avaliacao');
+        const allAvaliacoes = await pool.query('SELECT a.id, a.id_aluno, a.nota, a.observacao, a.data_avaliacao, b.id_professor_secundario FROM avaliacao a JOIN banca b ON a.id = b.id_avaliacao');
         res.json(allAvaliacoes.rows);
     } catch (err) {
         console.log(err.message);   
