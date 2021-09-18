@@ -9,6 +9,7 @@ const ListaCurso = () => {
         try {
             const response = await fetch("http://localhost:5000/cursos")
             const jsonData = await response.json()
+            console.log(jsonData)
             setCursos(jsonData)
         } catch (err) {
             console.log(err.message)
@@ -38,7 +39,7 @@ const ListaCurso = () => {
                         <th>Nome</th>
                         <th>Codigo</th>
                         <th>Valor</th>
-                        {/* <th>Professor</th> */}
+                        <th>Professor</th>
                         <th>Editar</th>
                         <th>Excluir</th>
                     </tr>
@@ -49,7 +50,7 @@ const ListaCurso = () => {
                         <td>{curso.nome}</td>
                         <td>{curso.codigo_curso}</td>
                         <td>{curso.valor_curso}</td>
-                        {/* <td>Professor</td> */}
+                        <td>{curso.id_professor}</td>
                         <td>
                             
                             <EditCurso curso={curso}/>

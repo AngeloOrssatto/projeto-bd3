@@ -3,15 +3,14 @@ import React, { Fragment, useState } from "react";
 const InputCurso = () => {
 
     const [nome, setNome] = useState("");
-    const [codigo, setCodigo] = useState();
-    const [valor, setValor] = useState();
+    const [codigo_curso, setCodigo] = useState("");
+    const [valor_curso, setValor] = useState("");
+    const [id_professor, setIDProf] = useState("")
 
     const onSubmitForm = async e => {
         e.preventDefault();
         try {
-            let codigo_curso = parseInt(codigo)
-            let valor_curso = parseFloat(valor)
-            const body = {nome, codigo_curso, valor_curso}
+            const body = {nome, codigo_curso, valor_curso, id_professor}
             console.log(body)
             const response = await fetch("http://localhost:5000/curso", {
                 method: 'POST',
@@ -32,10 +31,10 @@ const InputCurso = () => {
             </h1>
             <form className="d-flex mt-5" onSubmit={onSubmitForm}> 
                 <input type="text" placeholder="Nome" className="form-control" value={nome} onChange={e => setNome(e.target.value)}></input>
-                <input type="text" placeholder="Codigo" className="form-control" value={codigo} onChange={ev => setCodigo(ev.target.value)}></input>
-                <input type="text" placeholder="Valor" className="form-control" value={valor} onChange={evn => setValor(evn.target.value)}></input>
-                <input type="text" placeholder="Professor" className="form-control"></input>
-                <button className="btn btn-success">Add</button>
+                <input type="text" placeholder="Codigo" className="form-control" value={codigo_curso} onChange={ev => setCodigo(ev.target.value)}></input>
+                <input type="text" placeholder="Valor" className="form-control" value={valor_curso} onChange={evn => setValor(evn.target.value)}></input>
+                <input type="text" placeholder="Professor" className="form-control" value={id_professor} onChange={e => setIDProf(e.target.value)}></input>
+                <button className="btn btn-success">Adicionar</button>
             </form>
         </Fragment>
     )
