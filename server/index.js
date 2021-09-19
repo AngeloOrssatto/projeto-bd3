@@ -544,6 +544,32 @@ app.get("/stats/alunos-faltantes", async(req, res) => {
     }
 })
 
+app.get("/stats/alunos-devedores", async(req, res) => {
+    try {
+        const alunosDevedores = await pool.query('SELECT a AS devedor FROM aluno a JOIN matricula m ON m.id_aluno = a.id WHERE (SELECT count(*) FROM pagamento p WHERE p.id_matricula = m.id AND p.numero_parcela <= (SELECT EXTRACT (MONTH FROM age(now(), m.data_matricula)))) < (SELECT EXTRACT (MONTH FROM age(now(), m.data_matricula)))')
+        res.json(alunosDevedores.rows)
+    } catch (err) {
+        console.log(err)
+    }
+})
+
+app.get("/stats/comissao-professor", async(req, res) => {
+    try {
+        const comissaoProfessor = await pool.query("SELECT e.nome, (count(m)*c.valor_curso)/2 AS salario FROM empregado e JOIN tipo_empregado te ON te.id = e.id_tipo_empregado JOIN curso_professor cp ON cp.id_professor = e.id JOIN curso c ON c.id = cp.id_curso JOIN matricula m ON m.id_professor = e.id AND m.id_curso = c.id JOIN pagamento p ON p.id_matricula = m.id WHERE te.nome LIKE 'Professor' AND p.data_pagamento <= now() GROUP BY e.nome, c.valor_curso")
+        res.json(comissaoProfessor.rows)
+    } catch (err) {
+        console.log(err)
+    }
+})
+
+app.get("/stats/faturamento", async(req, res) => {
+    try {
+        const faturamento = await pool.query("SELECT e.nome, sum(p.valor_parcela + p.acrescimo - p.desconto - p.valor_parcela / 2) - sum(emp.salario)/count(emp) AS faturamento FROM escola e JOIN matricula m ON m.id_escola = e.id JOIN pagamento p ON p.id_matricula = m.id JOIN empregado emp ON emp.id_escola = e.id JOIN tipo_empregado te ON te.id = emp.id_tipo_empregado WHERE te.nome NOT LIKE 'Professor' GROUP BY e.nome")
+        res.json(faturamento.rows)
+    } catch (err) {
+        console.log(err)
+    }
+})
 
 app.listen(5000, () => {
     console.log("Server started on port 5000");
