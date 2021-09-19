@@ -490,6 +490,61 @@ app.get("/stats/cursos-ind", async(req, res) => {
     }
 })
 
+app.get("/stats/alunos-escola", async(req, res) => {
+    try {
+        const qtdeAlunosEscola = await pool.query('SELECT e.nome, COUNT(*) AS numero_alunos FROM escola e JOIN matricula m ON m.id_escola=e.id GROUP BY e.nome')
+        res.json(qtdeAlunosEscola.rows)
+    } catch (err) {
+        console.log(err)
+    }
+})
+
+app.get("/stats/alunos-curso", async(req, res) => {
+    try {
+        const qtdeAlunosCurso = await pool.query('SELECT c.nome, COUNT(*) AS numero_alunos FROM curso c JOIN matricula m ON m.id_curso = c.id GROUP BY c.nome')
+        res.json(qtdeAlunosCurso.rows)
+    } catch (err) {
+        console.log(err)
+    }
+})
+
+app.get("/stats/alunos-prof-curso", async(req, res) => {
+    try {
+        const qtdeAlunosProfCurso = await pool.query('SELECT e.nome as nome_professor, COUNT(*) AS numero_alunos, c.nome FROM curso c JOIN matricula m ON c.id = m.id_curso JOIN empregado e ON e.id = m.id_professor GROUP BY (e.nome, c.nome)')
+        res.json(qtdeAlunosProfCurso.rows)
+    } catch (err) {
+        console.log(err)
+    }
+})
+
+app.get("/stats/medias-boletim", async(req, res) => {
+    try {
+        const mediasBoletim = await pool.query('SELECT a.nome, AVG(b.nota_final) FROM aluno a JOIN boletim b ON b.id_aluno = a.id GROUP BY (a.nome)')
+        res.json(mediasBoletim.rows)
+    } catch (err) {
+        console.log(err)
+    }
+})
+
+app.get("/stats/alunos-menoridade", async(req, res) => {
+    try {
+        const alunosMenorIdade = await pool.query("SELECT a.nome, r.nome as nome_responsavel, r.telefone, r.celular FROM aluno a JOIN responsavel r ON a.id_responsavel = r.id WHERE (AGE(now(), a.data_nascimento) < '18 years'::interval)")
+        res.json(alunosMenorIdade.rows)
+    } catch (err) {
+        console.log(err)
+    }
+})
+
+app.get("/stats/alunos-faltantes", async(req, res) => {
+    try {
+        const alunosFaltantes = await pool.query('SELECT al.nome, COUNT(*) as numero_faltas FROM aula a JOIN matricula m ON m.id = a.id_matricula JOIN aluno al ON m.id_aluno = al.id WHERE a.status = false GROUP BY (al.nome)')
+        res.json(alunosFaltantes.rows)
+    } catch (err) {
+        console.log(err)
+    }
+})
+
+
 app.listen(5000, () => {
     console.log("Server started on port 5000");
 });
