@@ -1,7 +1,10 @@
 import React, { Fragment } from "react";
+import AlunosDevedores from "../components/Stats/AlunosDevedores";
 import AlunosFaltantes from "../components/Stats/AlunosFaltantes";
 import AlunosMenorIdade from "../components/Stats/AlunosMenorIdade";
+import ComissaoProfessor from "../components/Stats/ComissaoProfessor";
 import CursosIndisponiveis from "../components/Stats/CursosIndisponiveis";
+import Faturamento from "../components/Stats/Faturamento";
 import MediasBoletim from "../components/Stats/MediasBoletins";
 import QtdeAlunosCurso from "../components/Stats/QtdeAlunosCurso";
 import QtdeAlunosEscola from "../components/Stats/QtdeAlunosEscola";
@@ -20,6 +23,9 @@ const Stats = () => {
                 <MediasBoletim></MediasBoletim>
                 <AlunosMenorIdade></AlunosMenorIdade>
                 <AlunosFaltantes></AlunosFaltantes>
+                <AlunosDevedores></AlunosDevedores>
+                <ComissaoProfessor></ComissaoProfessor>
+                <Faturamento></Faturamento>
             </div>
         </Fragment>
     )
