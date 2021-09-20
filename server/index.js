@@ -546,7 +546,7 @@ app.get("/stats/alunos-faltantes", async(req, res) => {
 
 app.get("/stats/alunos-devedores", async(req, res) => {
     try {
-        const alunosDevedores = await pool.query('SELECT a AS devedor FROM aluno a JOIN matricula m ON m.id_aluno = a.id WHERE (SELECT count(*) FROM pagamento p WHERE p.id_matricula = m.id AND p.numero_parcela <= (SELECT EXTRACT (MONTH FROM age(now(), m.data_matricula)))) < (SELECT EXTRACT (MONTH FROM age(now(), m.data_matricula)))')
+        const alunosDevedores = await pool.query('SELECT a.nome AS devedor FROM aluno a JOIN matricula m ON m.id_aluno = a.id WHERE (SELECT count(*) FROM pagamento p WHERE p.id_matricula = m.id AND p.numero_parcela <= (SELECT EXTRACT (MONTH FROM age(now(), m.data_matricula)))) < (SELECT EXTRACT (MONTH FROM age(now(), m.data_matricula)))')
         res.json(alunosDevedores.rows)
     } catch (err) {
         console.log(err)
